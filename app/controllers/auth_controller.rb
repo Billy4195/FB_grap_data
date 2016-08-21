@@ -19,7 +19,14 @@ class AuthController < ApplicationController
 
   end
   def get_groups
+    @gapi = Koala::Facebook::API.new(session[:token])
     @groups = Array(params[:groups])
+    @messages = Array.new
+    @names = Array.new
+    @groups.each do |group|
+      @messages.push(@gapi.get_connection(group,"feed",{fields: ['message','from','name'] }))
+      @names.push(@gapi.get_object(group)['name'])
+    end
   end
 
 end

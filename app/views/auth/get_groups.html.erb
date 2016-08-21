@@ -1,4 +1,7 @@
-<% @groups.each do |group| %>
-<%= group %>
+<% @messages.zip(@names).each do |msgs,name| %>
+  <%= name %>
+  <% msgs.each do |msg| %>
+  <div><%= msg %></div>
+  <% end %>
 <% end %>
 <%= link_to "Show Groups",:controller => 'auth', :action => 'show_groups' %>
