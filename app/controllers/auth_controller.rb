@@ -12,7 +12,7 @@ class AuthController < ApplicationController
     redirect_to :action => 'show_groups'
   end
   def show_groups
-    if( session[:token] )
+    if( session.has_key?(:token) )
       @gapi = Koala::Facebook::API.new(session[:token])
       @groups = @gapi.get_connection('me','groups',api_version: "2.6")
     end
