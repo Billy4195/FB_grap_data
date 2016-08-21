@@ -1,3 +1,11 @@
-<% @groups.each do |group| %>
-<div><%= group['name'] %></div>
+<%= form_tag('/auth/get_groups') do %>
+  <% @groups.each do |group| %>
+    <div>
+      <%= check_box_tag 'groups[]',group['id'],false  %>
+      <%= label_tag(group['name']) %>
+      <%= group['id'] %>
+    </div>
+  <% end %>
+  <%= submit_tag("Submit") %>
 <% end %>
+<%= link_to "Home Page",:controller => 'auth',:action => 'index' %>

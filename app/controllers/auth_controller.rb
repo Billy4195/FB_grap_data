@@ -18,5 +18,8 @@ class AuthController < ApplicationController
     end
 
   end
+  def get_groups
+    @groups = Array(params[:groups])
+  end
 
 end
