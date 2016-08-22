@@ -24,7 +24,13 @@ class AuthController < ApplicationController
     @messages = Array.new
     @names = Array.new
     @groups.each do |group|
-      @messages.push(@gapi.get_connection(group,"feed",{fields: ['message','from','name'] }))
+      page = @gapi.get_connection(group,"feed",{fields: ['message','from','name'] })
+      content = Array.new
+      while !page.empty?
+        content.concat page
+        page = page.next_page
+      end
+      @messages.push(content)
       @names.push(@gapi.get_object(group)['name'])
     end
   end
