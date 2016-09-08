@@ -32,6 +32,40 @@ class AuthController < ApplicationController
       end
       @messages.push(content)
       @names.push(@gapi.get_object(group)['name'])
+      
+      if Group.where(id: group).exists?
+        @group = Group.where(id: group)[0]
+      else
+        @group = Group.new
+        @group.id = group
+        @group.name = @names.last
+      end
+      msgs = @messages.last
+      msgs.each do | msg |
+        if !msg.key?("message")
+          puts "out"
+          next
+        elsif Message.where(id: msg['id']).exists?
+          puts "msg exist"
+          next
+        end
+        @msg = @group.messages.new
+        if User.where(id: msg['from']['id']).exists?
+          puts "user exist"
+          @user = User.where(id: msg['from']['id'])[0]
+        else
+          puts "new user"
+          @user = User.new
+          @user.id = msg['from']['id']
+          @user.name = msg['from']['name']
+          @user.save
+        end
+        @msg.user = @user
+        @msg.content = msg['message']
+        @msg.id = msg['id']
+        @msg.save
+      end
+      @group.save
     end
   end
 
