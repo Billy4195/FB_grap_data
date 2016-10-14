@@ -68,5 +68,8 @@ class AuthController < ApplicationController
       @group.save
     end
   end
-
+  def get_page
+    @gapi = Koala::Facebook::API.new(session[:token])
+    @page = @gapi.get_object("ChiayiYunlin")
+  end
 end
