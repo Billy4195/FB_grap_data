@@ -1,3 +1,4 @@
+require 'group'
 class AuthController < ApplicationController
   def index
     @oauth = Koala::Facebook::OAuth.new('1736802146607522','b17e461faf7cd2b00d7f517ef93a2320','http://localhost:3000/auth/get_token')
@@ -70,6 +71,35 @@ class AuthController < ApplicationController
   end
   def get_page
     @gapi = Koala::Facebook::API.new(session[:token])
-    @page = @gapi.get_object("ChiayiYunlin")
+    @page = @gapi.get_object("nctucs.assoc")
+    @msgs = @gapi.get_connection(@page['id'],'feed')
+    @msgs.each do |msg|
+        m = Post.new
+        if !msg.key?("message")
+          next
+        elsif Post.where(id: msg['id']).exists?
+          next
+        end
+        m.content = msg['message']
+        m.id = msg['id']
+        m.page_id = @page['id']
+        m.create_time = msg['created_time']
+        m.save
+    end
+    @page = @gapi.get_object("nctucs")
+    @msgs = @gapi.get_connection(@page['id'],'feed')
+    @msgs.each do |msg|
+        m = Post.new
+        if !msg.key?("message")
+          next
+        elsif Post.where(id: msg['id']).exists?
+          next
+        end
+        m.content = msg['message']
+        m.id = msg['id']
+        m.page_id = @page['id']
+        m.create_time = msg['created_time']
+        m.save
+    end
   end
 end

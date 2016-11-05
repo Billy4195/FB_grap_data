@@ -19,4 +19,11 @@ class User
   field :id, type: String
   belongs_to :message
 end
-  
+
+class Post
+  include Mongoid::Document
+  field :content, type: String
+  field :id, type: String
+  field :page_id, type: String
+  field :create_time, type: Date
+end
